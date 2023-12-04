@@ -16,14 +16,17 @@ public class Diner extends Thread {
             int option;
 
             while (true) {
+                // diner enters the restaurant
+                System.out.println("Diner " + dinerId + " entered the restaurant and is looking at the options.");
+                Thread.sleep(1000);   
+                
                 //diners choose the type of food they will it
                 option = (int) (Math.random() * 3);
-                //go to chef that coocks that meal
-                chef = restaurant.getChefs()[option];
+                System.out.println("Diner " + dinerId + " would like to eat " + foodOption(option));
+                Thread.sleep(1000);
                 
-                System.out.println("Diner " + dinerId + " entered the restaurant.");
-
-                // Try to sit at the table.
+                // Try to sit at the table. If table is taken he will wait.
+                chef = restaurant.getChefs()[option];
                 chef.getSem().acquire();
 
                 //if table is empty
@@ -31,8 +34,8 @@ public class Diner extends Thread {
                     chef.setDinerId(dinerId); // ocupy the table by seting dinerID in chef.
                     System.out.println("Diner " + dinerId + " sat down to eat " + foodOption(option));
                     chef.simulateCook(chef.getChefId(), foodOption(option)); // simulate chef is cooking
-                    Thread.sleep((int) (Math.random() * 5000) + 1000); // Simulate diner is eating
-                    System.out.println("Diner " + dinerId + " finished eating " + foodOption(option) + " and is leaving the restaurant.");
+                    simulateEat(foodOption(option)); // Simulate diner is eating
+                    
                     
                     //release the table and set dinerId to 0
                     chef.getSem().release();
@@ -40,10 +43,6 @@ public class Diner extends Thread {
                     
                     // Wait 10 seconds before re-entering the restaurant
                     Thread.sleep(10000); 
-                
-                // if table is ocupied.
-                }else{
-                    System.out.println("Diner " + dinerId + " is waiting to eat " + foodOption(option));
                 }
             }
         } catch (InterruptedException e) {
@@ -52,9 +51,10 @@ public class Diner extends Thread {
     }
 
     // Method to simulate diner is eating
-    public void simulateEat() throws InterruptedException {
-        System.out.println("Diner " + dinerId + " is eating.");
+    public void simulateEat(String food) throws InterruptedException {
+        System.out.println("Diner " + dinerId + " is eating " + food + ".");
         Thread.sleep((int) (Math.random() * 5000)+1000);
+        System.out.println("Diner " + dinerId + " finished eating " + food + " and is leaving the restaurant.");
     }
 
     // Method to get food name based on option chosen by diner
@@ -63,7 +63,7 @@ public class Diner extends Thread {
             case 0:
                 return "sushi";
             case 1:
-                return "patsa";
+                return "pasta";
             default:
                 return "marmitako";
         }
