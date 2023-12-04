@@ -85,7 +85,7 @@ int main(){
             }
 
             if(bytesRead == -1){
-                printf("Child 2 says: Error reading the data (from SECOND child)...\n");
+                printf("Child 2 says: Error reading the data...\n");
             } else if(bytesRead == 0){
                 printf("Child 2 says: All the numbers from child 1 received correctly. A total of %d numbers received\n", count);
             }
